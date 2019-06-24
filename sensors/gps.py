@@ -22,7 +22,7 @@ def init():
 def get_gps():
     global gps
     if not gps:
-        print("Initalizing")
+        print("Initalizing GPS")
         gps = init()
     return gps
 
@@ -43,19 +43,29 @@ def runner():
         gps.update()
         current = time.monotonic()
         if current - last >= update_rate: 
-            val = __get_data()
+            _val = __get_data()
+            if _val:
+                val = _val
     return 
 
 
 def start_thread():
+    data = __get_data()
+
     global thread
     thread = threading.Thread(target = runner)
     thread.start()
+    while True:
+        data = __get_data()
+        if data:
+            return
+
+
 
 
 def get_data():
     global val
-    return val
+    return {'lat':val[0], 'long':val[1]}
 
 def write_cords(x,y):
     with open("outfile.txt", 'a') as f:

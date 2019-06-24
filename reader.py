@@ -5,43 +5,21 @@ import pandas as pd
     
 
 def gen_path():
+    with open("outfile.txt", 'r') as f:
+        raw = f.read()
     
-    def rng(chance = .02):
-        return np.random.random() <= chance
-        
-    start = 0, 0 
-    length = 400
-    
-    x_delta = np.random.random(length)
-    y_delta = np.random.random(length)
-    
-    x = [start[0]]
-    y = [start[1]]
-    
-    switch_x = False
-    switch_y = False
-    
-    for i in range(1,length):
-        
-        if rng():
-            switch_x = not switch_x
-        if rng():
-            switch_y = not switch_y
-            
-        if switch_x:
-            new_x = x[i-1] + x_delta[i]
-        else :
-            new_x = x[i-1] - x_delta[i]
-        if switch_y:
-            new_y = y[i-1] + y_delta[i]
-        else :
-            new_y = y[i-1] - y_delta[i]
-            
-            
-        x.append(new_x)
-        y.append(new_y)
-    
-    return np.abs([x,y])
+    raw = raw.split('\n')
+    x = []
+    y = []
+    for i, row in enumerate( raw[:-1]):
+        splt = row.split(',')
+        print(i, '-' ,splt[0],' --- ', splt[1])
+        x.append(float(splt[0]))
+        y.append(float(splt[1]))
+
+
+
+    return [x,y]
         
 
 

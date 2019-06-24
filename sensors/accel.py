@@ -2,13 +2,18 @@ from adxl345 import ADXL345
 import pandas as pd
 import numpy as np
 
+
+print("Initalizing Accelerometer")
 s = ADXL345()
 
 
 
 def raw_read():
     ans = s.get_axes(False)
-    return ans
+    x = ans['x']
+    y = ans['y']
+    z = ans['z']
+    return {'x_accel':x, 'y_accel':y, 'z_accel':z} 
 
 
 
@@ -32,9 +37,8 @@ def get_data(samples = 1):
     xs = np.mean(xs)
     ys = np.mean(ys)
     zs = np.mean(zs)
+    return {'x_accel':xs, 'y_accel':ys, 'z_accel':zs} 
 
-    result = {'x':xs, 'y':ys, 'z':zs}
-    return result
 
      
     
