@@ -27,9 +27,9 @@ def get_data(samples = 1):
     amt = samples 
     for num in range(0, amt):
         ans = raw_read()
-        x = ans['x'] 
-        y = ans['y']
-        z = ans['z']
+        x = ans['x_accel'] 
+        y = ans['y_accel']
+        z = ans['z_accel']
         
         xs.append(x)
         ys.append(y)
