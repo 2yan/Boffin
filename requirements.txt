@@ -1,0 +1,5 @@
+adxl345
+adafruit-circuitpython-gps
+RPI.GPIO
+adafruit-blinka
+
