@@ -11,19 +11,11 @@ val = False
 thread = False
 gps = False
 
-def init():
-    global update_rate
-    uart = serial.Serial("/dev/ttyUSB0", baudrate=9600, timeout=3000)
-    gps = adafruit_gps.GPS(uart, debug=False)
-    gps.send_command(b'PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0')
-    gps.send_command('PMTK220,{}'.format(int(update_rate*1000)).encode())
-    return gps
-
 def get_gps():
     global gps
     if not gps:
         print("Initalizing GPS")
-        gps = init()
+        gps = init_gps()
     return gps
 
 def __get_data():
@@ -49,17 +41,6 @@ def runner():
     return 
 
 
-def start_thread():
-    data = __get_data()
-
-    global thread
-    thread = threading.Thread(target = runner)
-    thread.start()
-    while True:
-        data = __get_data()
-        if data:
-            return
-
 
 
 
@@ -71,5 +52,24 @@ def write_cords(x,y):
     with open("outfile.txt", 'a') as f:
         f.write("{},{}\n".format(x,y))
 
-start_thread()
+def init_gps():
+    global update_rate
+    uart = serial.Serial("/dev/ttyUSB0", baudrate=9600, timeout=3000)
+    gps = adafruit_gps.GPS(uart, debug=False)
+    gps.send_command(b'PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0')
+    gps.send_command('PMTK220,{}'.format(int(update_rate*1000)).encode())
+    return gps
 
+def init():
+    data = __get_data()
+
+    global thread
+    thread = threading.Thread(target = runner)
+    thread.start()
+    while True:
+        data = __get_data()
+        if data:
+            print("GPS initalized")
+            return
+
+        

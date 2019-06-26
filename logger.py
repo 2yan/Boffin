@@ -28,12 +28,13 @@ def worker():
             write_data(data)
 
 def begin():
-    thread = threading.Thread(target = worker)
-    thread.start()
+    worker_thread = threading.Thread(target = worker)
+    worker_thread.start()
 
     jobs = [accel, gps, clock]
     cols = []
     for job in jobs:
+        job.init()
         test_val = job.get_data()
         keys = test_val.keys()
         for key in keys:
@@ -48,18 +49,38 @@ def begin():
     col_order = cols
     work  = [t]
     
-    while True:
-        local_work = {}
-        for job in jobs:
-            ans = job.get_data()
-            for key in ans.keys():
-               local_work[key] = ans[key]
+
+    def data_log_func():
+        global done
+        done = False
+
+        while not done:
+            local_work = {}
+            for job in jobs:
+                ans = job.get_data()
+                for key in ans.keys():
+                   local_work[key] = ans[key]
+            
+            work.append(local_work)
+
+        print("Stopping logging")
+        print("need to process remaining data:")
         
-        work.append(local_work)
+        while len(work) > 0:
+            continue
+        
+        worker_thread.exit()
+
+        return 
+    
+    data_log_thread = threading.Thread(target = data_log_func)
+    data_log_thread.start()
+    
 
 
-
-
+def end():
+    global done
+    done = True
 
 
 if __name__ == '__main__':
