@@ -5,7 +5,7 @@ import threading
 outfile = 'results.txt'
 work = []
 col_order = []
-
+done = False
 
 def write_data(data):
     global col_order
@@ -22,8 +22,8 @@ def worker():
     global work
     while True:
         backlog = len(work)
-        print('backlog:', backlog)
         if backlog > 0:
+            print('Adding new data: {} '.format(not done), 'backlog:', backlog)
             data = work.pop(0)
             write_data(data)
 
