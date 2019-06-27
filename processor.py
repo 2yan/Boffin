@@ -19,6 +19,14 @@ def zero_and_one(x):
 def fit_to_universe(data):
     data['x'] = zero_and_one(data['x'])
     data['y'] = zero_and_one(data['y'])
-
-    
     return data
+
+
+def reduce_obs(data, amt = 10000):
+    if len(data) < amt:
+        return data
+
+    data['i'] = data.index/(len(data)/amt)
+    data['i'] = data['i'].apply(int)
+    data = data.groupby('i').mean()
+    return data 

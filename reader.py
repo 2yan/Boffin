@@ -4,33 +4,24 @@ import pandas as pd
 
     
 
-def gen_path():
-    with open("outfile.txt", 'r') as f:
-        raw = f.read()
+       
+
+
+
+
+def get_data():
+    raw_data = pd.read_csv('results.txt')
+    raw_data = raw_data.sort_values('time')
     
-    raw = raw.split('\n')
-    x = []
-    y = []
-    for i, row in enumerate( raw[:-1]):
-        splt = row.split(',')
-        print(i, '-' ,splt[0],' --- ', splt[1])
-        x.append(float(splt[0]))
-        y.append(float(splt[1]))
+    x = raw_data['lat']
+    y = raw_data['long']
 
 
-
-    return [x,y]
-        
-
-
-
-
-def get_data():    
-    x,y = gen_path()
     data = pd.DataFrame(index = range(len(x)))
     data['x'] = x
     data['y'] = y
-    data['accel'] = np.sin(data.index)
+    data['accel'] = raw_data['x_accel'] + raw_data['y_accel'] + raw_data['z_accel']
+    
     data['brake'] = data['accel']
     mask = data['accel'] <= 0
     data.loc[mask, 'accel'] = 0

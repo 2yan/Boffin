@@ -7,6 +7,7 @@ from display import Display
 
 data = reader.get_data()
 
+data = processor.reduce_obs(data, 1000)
 data = processor.smooth_data(data)
 data = processor.fit_to_universe(data)
 
@@ -14,4 +15,4 @@ data = processor.fit_to_universe(data)
 d = Display()
 
 img = d.draw_data(data)
-img
+img.save('result.png')
