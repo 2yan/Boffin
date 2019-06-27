@@ -1,35 +1,64 @@
 from sensors import gps, accel, clock
 import threading
-
+import time
 
 outfile = 'results.txt'
 work = []
 col_order = []
 done = False
+keep_working = True
 
-def write_data(data):
+def write_data(datas):
     global col_order
-    to_write = []
+    rows = []
+    
+    for data in datas:
+        to_write = []
+        for col in col_order:
+            to_write.append(str(data[col]))
+            row = ','.join(to_write)
+            rows.append(row)
 
-    for col in col_order:
-        to_write.append(str(data[col]))
 
     with open(outfile, 'a') as f:
-       vals = ','.join(to_write)
-       f.write(vals + '\n')
+        for row in rows:
+            f.write(row + '\n')
+
+
+
 
 def worker():
     global work
+    global keep_working
+    last_print = time.monotonic()
     while True:
+        if not keep_working:
+            return
         backlog = len(work)
         if backlog > 0:
-            print('Adding new data: {} '.format(not done), 'backlog:', backlog)
-            data = work.pop(0)
-            write_data(data)
+            now = time.monotonic()
+            if abs(last_print - now) > 5:
+                print('Adding new data: {} '.format(not done), 'backlog:', backlog)
+                last_print = now
+
+
+
+            datas = []
+            while (len(work) > 0 ) and (len(datas) < 100):
+                data = work.pop(0)
+                datas.append(data)
+            write_data(datas)
 
 def begin():
-    worker_thread = threading.Thread(target = worker)
-    worker_thread.start()
+    workers = []
+    global keep_working
+    keep_working = True
+    for num in range(1):
+        print("Starting worker {}".format(num))
+        worker_thread = threading.Thread(target = worker)
+        worker_thread.start()
+        workers.append(worker_thread)
+
 
     jobs = [accel, gps, clock]
     cols = []
@@ -68,9 +97,7 @@ def begin():
         
         while len(work) > 0:
             continue
-        
-        worker_thread.exit()
-
+        keep_working = False
         return 
     
     data_log_thread = threading.Thread(target = data_log_func)

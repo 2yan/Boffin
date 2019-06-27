@@ -4,6 +4,8 @@ import numpy as np
 import time
 import threading
 
+
+s = False
 callibration = {'x_accel':0,'y_accel':0, 'z_accel':0 }
     
 def callibrate(secs = 5):
@@ -76,8 +78,10 @@ def get_data(samples = 1, remove_gravity = True):
 
 def init():
     print("Initalizing Accelerometer")
+    global s
     s = ADXL345()
     callibrate_async(5) 
+
     print("Accel initalized")
 if __name__ == '__main__':
 
