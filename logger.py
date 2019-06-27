@@ -8,16 +8,18 @@ col_order = []
 done = False
 keep_working = True
 
+    
 def write_data(datas):
     global col_order
     rows = []
-    
+
     for data in datas:
         to_write = []
         for col in col_order:
             to_write.append(str(data[col]))
-            row = ','.join(to_write)
-            rows.append(row)
+        row = ','.join(to_write)
+        rows.append(row)
+
 
 
     with open(outfile, 'a') as f:
@@ -45,8 +47,7 @@ def worker():
 
             datas = []
             while (len(work) > 0 ) and (len(datas) < 100):
-                data = work.pop(0)
-                datas.append(data)
+                datas.append(work.pop(0))
             write_data(datas)
 
 def begin():
