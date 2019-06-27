@@ -1,6 +1,9 @@
 from sensors import gps, accel, clock
 import threading
 import time
+import os
+import signal
+import sys
 
 outfile = 'results.txt'
 work = []
@@ -32,25 +35,33 @@ def write_data(datas):
 def worker():
     global work
     global keep_working
+
     last_print = time.monotonic()
+    
     while True:
-        if not keep_working:
-            return
+        
+        if (not keep_working) and (len(work) == 0):
+            print("DONE WORKING")
+            return 
         backlog = len(work)
+                
         if backlog > 0:
+            print('Keep Working: ', keep_working, ' | BACKLOG :', backlog)
             now = time.monotonic()
-            if abs(last_print - now) > 5:
-                print('Adding new data: {} '.format(not done), 'backlog:', backlog)
-                last_print = now
-
-
-
             datas = []
-            while (len(work) > 0 ) and (len(datas) < 100):
+            while (len(work) > 0 ) and (len(datas) < 500):
                 datas.append(work.pop(0))
             write_data(datas)
 
+workers = []
+
 def begin():
+    try:
+        os.remove(outfile)
+
+    except Exception as e:
+        pass
+    global workers
     workers = []
     global keep_working
     keep_working = True
@@ -82,6 +93,8 @@ def begin():
 
     def data_log_func():
         global done
+        global work
+
         done = False
 
         while not done:
@@ -94,10 +107,17 @@ def begin():
             work.append(local_work)
 
         print("Stopping logging")
-        print("need to process remaining data:")
+        print("need to process remaining data: {}".format(len(work)))
         
-        while len(work) > 0:
-            continue
+        d = False
+
+        while not d:
+            print('work still remaining:',len(work))
+            if len(work) == 0:
+                d = True
+                    
+        print("DONE")
+        global keep_working
         keep_working = False
         return 
     
@@ -105,6 +125,14 @@ def begin():
     data_log_thread.start()
     
 
+def signal_handler(sig, frame):
+    end()
+    
+    for t in workers:
+        t.join()
+    sys.exit(0) 
+
+signal.signal(signal.SIGINT, signal_handler)
 
 def end():
     global done
