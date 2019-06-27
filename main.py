@@ -13,7 +13,7 @@ print("FITTING")
 data = processor.fit_to_universe(data)
 
 print("REDUCING OBS")
-data = processor.reduce_obs(data, 1000)
+data = processor.reduce_obs(data, 200)
 
 print("DRAWING")
 d = Display()

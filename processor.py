@@ -19,6 +19,11 @@ def zero_and_one(x):
 def fit_to_universe(data):
     data['x'] = zero_and_one(data['x'])
     data['y'] = zero_and_one(data['y'])
+   
+
+    data['accel'] = data['accel']/data['accel'].max()
+    data['brake'] = -1 * (data['brake']/data['brake'].min())
+
     return data
 
 
