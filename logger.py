@@ -81,6 +81,7 @@ def begin():
         for key in keys:
             cols.append(key)
 
+    print("ALL JOBS INITalized")
     t = {}
     for c in cols:
         t[c] = c
