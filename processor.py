@@ -5,9 +5,9 @@ from scipy.ndimage.filters import gaussian_filter1d
 
 
 
-def smooth_data(data):
-    data['x'] = gaussian_filter1d(data['x'], sigma = 1)
-    data['y'] =  gaussian_filter1d(data['y'], sigma = 1)
+def smooth_data(data, sigma = 1):
+    data['x'] = gaussian_filter1d(data['x'], sigma = sigma)
+    data['y'] =  gaussian_filter1d(data['y'], sigma = sigma)
     return data
     
 def zero_and_one(x):
