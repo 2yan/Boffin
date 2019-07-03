@@ -1,4 +1,4 @@
-from sensors import gps, accel, clock
+from sensors import gps, nine_dof, clock
 import threading
 import time
 import os
@@ -72,7 +72,7 @@ def begin():
         workers.append(worker_thread)
 
 
-    jobs = [accel, gps, clock]
+    jobs = [nine_dof, gps, clock]
     cols = []
     for job in jobs:
         job.init()

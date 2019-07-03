@@ -72,4 +72,7 @@ def init():
             print("GPS initalized")
             return
 
-        
+if __name__ == '__main__':
+    init()
+    while True:
+        print(get_data())
