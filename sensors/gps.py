@@ -7,7 +7,7 @@ import threading
 
 
 update_rate = .1 #IN SECONDS
-val = False
+val = False,False 
 thread = False
 gps = False
 
@@ -21,7 +21,7 @@ def get_gps():
 def __get_data():
     gps = get_gps()
     if not gps.has_fix:
-        return False
+        return False, False
     return (gps.latitude, gps.longitude)
 
 

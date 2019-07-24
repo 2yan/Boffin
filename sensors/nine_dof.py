@@ -29,12 +29,13 @@ def load_callib():
 sensor = get_sensor()
 
 
-def get_data(samples= 1):
+def get_data(live = False):
     accel= sensor.read_accelerometer()
     gyro = sensor.read_gyroscope()
     mag = sensor.read_magnetometer()
     lin_accel = sensor.read_linear_acceleration()
-
+    if live:
+        return accel, gyro, mag, lin_accel
     dims = 'xyz'
     
     maps= {'accel':accel, 

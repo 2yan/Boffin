@@ -19,7 +19,7 @@ for index in tqdm(data.index):
     time = data.loc[index, 'time'] 
     F.update(a, g, m, time)
     heading = F.heading
-    data.loc[index, 'heading'] = heading
+    data.loc[index, 'heading'] = heading - 16.1
 
 data.to_csv('processed.csv', index = False)
 
