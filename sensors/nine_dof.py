@@ -30,37 +30,25 @@ sensor = get_sensor()
 
 
 def get_data(samples= 1):
-    x = []
-    y = []
-    z = []
+    accel= sensor.read_accelerometer()
+    gyro = sensor.read_gyroscope()
+    mag = sensor.read_magnetometer()
+    lin_accel = sensor.read_linear_acceleration()
 
-    yaw = []
-    roll = []
-    pitch = []
+    dims = 'xyz'
     
-    for num in range(samples):
-        x1,x2,x3 = sensor.read_linear_acceleration()
-        euler = sensor.read_euler()
+    maps= {'accel':accel, 
+            'gyro':gyro,
+            'mag':mag,
+            'lin_accel':lin_accel}
+    final = {}
 
-        x.append(x1)
-        y.append(x2)
-        z.append(x3)
+    for key in maps.keys():
+        final[key + '_x'] = maps[key][0]
+        final[key + '_y'] = maps[key][1]
+        final[key + '_z'] = maps[key][2]
 
-        yaw.append(euler[0])
-        pitch.append(euler[1])
-        roll.append(euler[2])
-
-
-
-
-    ans = {'x_accel':np.mean(x),
-            'y_accel':np.mean(y),
-            'z_accel':np.mean(z),
-            'yaw':np.mean(yaw),
-            'pitch':np.mean(pitch),
-            'roll':np.mean(roll)
-            }
-    return ans
+    return final 
 
 
 def init():

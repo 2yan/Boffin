@@ -2,13 +2,10 @@ import numpy as np
 import pandas as pd
 
 
+
+def load_raw_data():
+    return pd.read_csv('results.txt')
     
-
-       
-
-
-
-
 def get_data():
     raw_data = pd.read_csv('results.txt')
     raw_data = raw_data.sort_values('time')

@@ -2,3 +2,4 @@ adafruit-circuitpython-gps
 RPI.GPIO
 adafruit-blinka
 git+https://github.com/adafruit/Adafruit_Python_BNO055.git
+tqdm

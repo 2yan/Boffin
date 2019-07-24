@@ -73,6 +73,7 @@ def begin():
 
 
     jobs = [nine_dof, gps, clock]
+    jobs = [nine_dof, clock]
     cols = []
     for job in jobs:
         job.init()
